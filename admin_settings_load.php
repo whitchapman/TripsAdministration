@@ -54,20 +54,22 @@
 		<h3 id="myModalLabel">Edit Current Season</h3>
 	</div>
 	<div class="modal-body">
-		<select id="modal_edit_current_season_select">
-			<?php
-				foreach ($season_ids as $season_id) {
-					print "<option>{$season_id}</option>";
-				}
-			?>
-		</select>
+		<div class="control-group info">
+			<select id="modal_edit_current_season_select">
+				<?php
+					foreach ($season_ids as $season_id) {
+						print "<option>{$season_id}</option>";
+					}
+				?>
+			</select>
+		</div>
 		<div class="control-group help-inline error">
 			<span class="help-inline" id="modal_edit_current_season_result"></span>
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button class="btn btn-primary" onclick="save_current_season();">Save</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<script type="text/javascript">
 
 			$("#modal_edit_current_season").on("show", function () {
@@ -80,8 +82,7 @@
 				if (season == <?php print $current_season_quoted; ?>) {
 					$("#modal_edit_current_season").modal("hide");
 				} else {
-					$("#modal_edit_current_season_result").html("Saving...");
-
+					//$("#modal_edit_current_season_result").html("Saving...");
 					$.ajax({
 						url: "admin_settings_save.php",
 						data: {
@@ -97,7 +98,7 @@
 								var html = "Error: " + json.msg + "<br>";
 								$("#modal_edit_current_season_result").html(html + "<pre>" + JSON.stringify(json) + "</pre>");
 							} else {  
-								$("#modal_edit_current_season_result").html("Saved.");
+								//$("#modal_edit_current_season_result").html("Saved.");
 								$("#modal_edit_current_season").modal("hide");
 								add_alert("success", "Settings Saved.");
 								reload_seasons = true;

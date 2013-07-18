@@ -63,22 +63,24 @@
 		<h3>Copy <?php print $trip_str; ?></h3>
 	</div>
 	<div class="modal-body">
-		<span class="help-inline">to season: </span>
-		<select id="modal_trip_copy_select">
-			<option></option>
-			<?php
-				foreach ($season_ids as $season_id) {
-					print "<option>{$season_id}</option>";
-				}
-			?>
-		</select>
+		<div class="control-group info">
+			<span class="help-inline">to season: </span>
+			<select id="modal_trip_copy_select">
+				<option></option>
+				<?php
+					foreach ($season_ids as $season_id) {
+						print "<option>{$season_id}</option>";
+					}
+				?>
+			</select>
+		</div>
 		<div class="control-group help-inline error">
 			<span class="help-inline" id="modal_trip_copy_result"></span>
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button class="btn btn-primary" onclick="save_trip_copy();">Save</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<script type="text/javascript">
 
 //			$("#modal_trip_copy").on("show", function () {
@@ -91,7 +93,6 @@
 				if (new_season == "") {
 					$("#modal_trip_copy").modal("hide");
 				} else {
-					$("#modal_trip_copy_result").html("Saving...");
 					$.ajax({
 						url: "admin_trip_copy_save.php",
 						data: {
@@ -108,20 +109,10 @@
 								var html = "Error: " + json.msg + "<br>";
 								$("#modal_trip_copy_result").html(html + "<pre>" + JSON.stringify(json) + "</pre>");
 							} else {
-								$("#modal_trip_copy_result").html("Copied.");
 								$("#modal_trip_copy").modal("hide");
 
-								//show results subtab on trips panel but set so resets to standard subtab next time on trips tab
-								$("#recently_saved_trip_str").html(json.msg);
-								$("#recently_saved_trip_msg").html("<p>All dates were adjusted by the difference in season years: "+json.season_diff+"</p>");
-								recently_saved_trip = json.new_trip;
-								$('#trips_panel_tab a[href="#tabs_trips_panel_results"]').tab('show');
-
-								reload_trips = false; //retain results tab when opening trips tab
-								open_tab("trips");
-								reload_trips = true;
-
-								add_alert("success", "Trip Copied.");
+								add_alert("success", "Trip Copied. Editing...");
+								load_trip_edit(json.new_trip);
 
 								reload_seasons = true;
 								reload_sites = true;

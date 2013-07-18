@@ -1,6 +1,5 @@
 <?php
 
-	//$throw_errors = true;
 	include "check_login.php";
 
 	//accept optional season_id or site_id
@@ -21,7 +20,6 @@
 
 	$season_ids = array();
 	while ($row = $result->fetch_assoc()) {
-		$season_id = $row["season_id"];
 		$season_ids[] = $row["season_id"];
 	}
 
@@ -31,7 +29,6 @@
 	if (!is_numeric($selected_season_id)) {
 		$selected_season_id = $season_ids[0];
 	}
-	//$selected_season_quoted = "\"".$selected_season_id."\"";
 
 	//-----------------------------------------------------------------
 
@@ -56,9 +53,6 @@
 	}
 
 	$result->close();
-	
-	//$selected_site_quoted = "\"".$selected_site_id."\"";
-	//$selected_title_quoted = "\"".$selected_title."\"";
 
 	//-----------------------------------------------------------------
 
@@ -88,7 +82,7 @@
 	<div class="modal-body">
 		<form class="form-horizontal">
 
-		  <div class="control-group" id="modal_trip_add_season">
+		  <div class="control-group info" id="modal_trip_add_season">
 		    <label class="control-label" for="modal_trip_add_season_select">Season</label>
 		    <div class="controls">
 					<select id="modal_trip_add_season_select">
@@ -102,7 +96,7 @@
 		    </div>
 		  </div>
 
-		  <div class="control-group">
+		  <div class="control-group info">
 		    <div class="controls">
 					<label class="radio inline">
 					  <input type="radio" name="modal_trip_add_site_radio" id="modal_trip_add_site_radio_existing" value="existing" checked>
@@ -117,14 +111,14 @@
 
 			<div class="tabbable" id="tabs_modal_trip_add_site">
 				<div style="display:none;">
-					<ul id="trips_panel_tab" class="nav nav-tabs">
+					<ul class="nav nav-tabs">
 						<li><a id="tabs_modal_trip_add_site_link_existing" href="#tabs_modal_trip_add_site_panel_existing" data-toggle="tab"></a></li>
 						<li><a id="tabs_modal_trip_add_site_link_new" href="#tabs_modal_trip_add_site_panel_new" data-toggle="tab"></a></li>
 					</ul>
 				</div>
 				<div class="tab-content">
 					<div id="tabs_modal_trip_add_site_panel_existing" class="tab-pane active">
-						<div class="control-group" id="modal_trip_add_site_existing">
+						<div class="control-group info" id="modal_trip_add_site_existing">
 							<label class="control-label" for="modal_trip_add_site_select">Site</label>
 							<div class="controls">
 								<select id="modal_trip_add_site_select">
@@ -143,7 +137,7 @@
 						</div>
 					</div><!-- tab-pane -->
 					<div id="tabs_modal_trip_add_site_panel_new" class="tab-pane">
-						<div class="control-group" id="modal_trip_add_site_new">
+						<div class="control-group info" id="modal_trip_add_site_new">
 							<label class="control-label" for="modal_trip_add_site_input">Site</label>
 							<div class="controls">
 								<input type="text" id="modal_trip_add_site_input" placeholder="New Site">
@@ -154,7 +148,7 @@
 				</div><!-- tab-content -->
 			</div><!-- tabbable -->
 
-			<div class="control-group" id="modal_trip_add_title">
+			<div class="control-group info" id="modal_trip_add_title">
 				<label class="control-label" for="modal_trip_add_title_input">Title</label>
 				<div class="controls">
 					<input type="text" id="modal_trip_add_title_input" value="<?php print $selected_title; ?>">
@@ -162,7 +156,7 @@
 				</div>
 			</div>
 
-		  <div class="control-group" id="modal_trip_add_trip_leader">
+		  <div class="control-group info" id="modal_trip_add_trip_leader">
 		    <label class="control-label" for="modal_trip_add_trip_leader_select">Trip Leader</label>
 		    <div class="controls">
 					<select id="modal_trip_add_trip_leader_select">
@@ -188,8 +182,8 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button class="btn btn-primary" onclick="save_trip_add();">Save</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<script type="text/javascript">
 
 			$("#modal_trip_add_site_radio_existing").click(function() {
@@ -211,16 +205,6 @@
 				$("#modal_trip_add_title_input").val($("#modal_trip_add_site_input").val());
 			});
 
-			function show_result(result, control_group_id) {
-				if (result.length > 0) {
-					$("#"+control_group_id).addClass("error");
-					$("#"+control_group_id+"_result").html(result);
-				} else {
-					$("#"+control_group_id).removeClass("error");
-					$("#"+control_group_id+"_result").html("");
-				}
-			}
-
 			function save_trip_add() {
 				var valid_add = true;
 
@@ -237,7 +221,6 @@
 				//do validation here
 
 				if (valid_add) {
-					$("#modal_trip_add_result").html("Saving...");
 					$.ajax({
 						url: "admin_trip_add_save.php",
 						data: {
@@ -265,20 +248,10 @@
 								show_result(json.title_result, "modal_trip_add_title");
 								show_result(json.trip_leader_result, "modal_trip_add_trip_leader");
 							} else {
-								$("#modal_trip_add_result").html("Added.");
 								$("#modal_trip_add").modal("hide");
 
-								//show results subtab on trips panel but set so resets to standard subtab next time on trips tab
-								$("#recently_saved_trip_str").html(json.msg);
-								$("#recently_saved_trip_msg").html("<p>All dates were defaulted.</p>");
-								recently_saved_trip = json.new_trip;
-								$('#trips_panel_tab a[href="#tabs_trips_panel_results"]').tab('show');
-
-								reload_trips = false; //retain results tab when opening trips tab
-								open_tab("trips");
-								reload_trips = true;
-
-								add_alert("success", "Trip Added.");
+								add_alert("success", "Trip Added with defaults. Editing...");
+								load_trip_edit(json.new_trip);
 
 								reload_seasons = true;
 								reload_sites = true;
@@ -294,8 +267,6 @@
 
 				}
 			}
-
-
 
 		</script>
 	</div>

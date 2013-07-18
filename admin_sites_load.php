@@ -32,6 +32,7 @@
 
 	//-----------------------------------------------------------------
 
+	$selected_site_id = "";
 	if (is_numeric($trip_id)) {
 		$trip_id = intval($trip_id);
 
@@ -135,12 +136,12 @@
 			$max_capacity = $row["max_capacity"];
 			$max_waitlist = $row["max_waitlist"];
 
-			$num_confirmations = 25;
+			$num_confirmed = 25;
 			$num_signups = 100;
 
 			$start_date_str = date("m/d/Y", $start_date);
 			$end_date_str = date("m/d/Y", $end_date);
-			$trip_state_label = create_trip_state_label($trip_state, $full_payment_date, $start_date, $end_date, $max_capacity, $max_waitlist, $num_confirmations, $num_signups);
+			$trip_state_label = create_trip_state_label($trip_state, $full_payment_date, $start_date, $end_date, $max_capacity, $max_waitlist, $num_confirmed, $num_signups);
 
 			print "<tr>";
 			print "<td>{$season_id}</td>";
@@ -151,7 +152,7 @@
 			print "<td>{$trip_state_label}</td>";
 			print "<td><div class=\"btn-group\">";
 			print "<a class=\"btn btn-small\" href=\"preview_trip.php?trip={$trip_id}\" target=\"_blank\">Preview</a>";
-			print "<a class=\"btn btn-small\" href=\"preview_trip.php?trip={$trip_id}\" onclick=\"return false;\" target=\"_blank\">Edit</a>";
+			print "<a class=\"btn btn-small\" href=\"#\" onclick=\"load_trip_edit({$trip_id}); return false;\">Edit</a>";
 			print "<a class=\"btn btn-small\" href=\"#\" onclick=\"load_modal_trip_copy({$trip_id}); return false;\">Copy</a>";
 			print "</div></td>";
 			print "</tr>";

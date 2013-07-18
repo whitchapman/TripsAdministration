@@ -85,7 +85,8 @@
 					<li><a href="#settings" data-toggle="tab"><i class="icon-chevron-right"></i> Settings</a></li>
 					<li><a href="#seasons"  data-toggle="tab"><i  class="icon-chevron-right"></i> Seasons</a></li>
 					<li><a href="#sites"  data-toggle="tab"><i  class="icon-chevron-right"></i> Sites</a></li>
-					<li><a href="#trips" data-toggle="tab"><i class="icon-chevron-right"></i> Trips</a></li>
+					<li><a href="#add_trip" data-toggle="tab"><i class="icon-chevron-right"></i> Add Trip</a></li>
+					<li><a href="#edit_trip" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Trip</a></li>
 					<li><a href="#members" data-toggle="tab"><i class="icon-chevron-right"></i> Members</a></li>
 					<li><a href="#signups" data-toggle="tab"><i class="icon-chevron-right"></i> Signups</a></li>
 				</ul>
@@ -132,49 +133,49 @@
 
 					<div class="tab-pane" id="settings">
 						<div id="settings_results">
-							<h3>Settings</h3>
+							<!--<h3>Settings</h3>-->
 						</div>
 					</div><!-- tab-pane -->
 
 					<div class="tab-pane" id="seasons">
 						<div id="seasons_results">
-							<h3>Seasons</h3>
+							<!--<h3>Seasons</h3>-->
 						</div>
 					</div><!-- tab-pane -->
 
 					<div class="tab-pane" id="sites">
 						<div id="sites_results">
-							<h3>Sites</h3>
+							<!--<h3>Sites</h3>-->
 						</div>
 					</div><!-- tab-pane -->
 
-					<div class="tab-pane hero-unit" id="trips">
+					<div class="tab-pane" id="add_trip">
+						<div id="tabs_trips_panel_standard" class="tab-pane hero-unit active">
+							<p>Add a new trip: <button class="btn btn-primary" type="button" onclick="load_modal_trip_add();">Add Trip</button></p>
+							<p>or</p>
+							<p>View trips in the context of:
+								<ul>
+									<li><a href="#" onclick="open_tab('seasons'); return false;">Seasons</a></li>
+									<li><a href="#" onclick="open_tab('sites'); return false;">Sites</a></li>
+								</ul>
+							</p>
+						</div>
+					</div><!-- trips tab-pane -->
+
+					<div class="tab-pane" id="edit_trip">
 						<div class="tabbable" id="tabs_trips">
 							<div style="display:none;">
 								<ul id="trips_panel_tab" class="nav nav-tabs">
 									<li><a href="#tabs_trips_panel_standard" data-toggle="tab"></a></li>
 									<li><a href="#tabs_trips_panel_edit" data-toggle="tab"></a></li>
-									<li><a href="#tabs_trips_panel_results" data-toggle="tab"></a></li>
 								</ul>
 							</div>
 							<div class="tab-content">
-								<div id="tabs_trips_panel_standard" class="tab-pane active">
-									<p>Add a new trip: <button class="btn btn-primary" type="button" onclick="load_modal_trip_add();">Add Trip</button></p>
-									<p>or</p>
-									<p>View trips in the context of:
+								<div id="tabs_trips_panel_standard" class="tab-pane hero-unit active">
+									<p>Find a trip to Edit in the context of:
 										<ul>
 											<li><a href="#" onclick="open_tab('seasons'); return false;">Seasons</a></li>
 											<li><a href="#" onclick="open_tab('sites'); return false;">Sites</a></li>
-										</ul>
-									</p>
-								</div>
-								<div id="tabs_trips_panel_results" class="tab-pane">
-									<p>You have just created <span id="recently_saved_trip_str" style="font-weight:bold;"></span></p>
-									<span id="recently_saved_trip_msg"></span>
-									<p>View and then edit your new trip in the context of:
-										<ul>
-											<li><a href="#" onclick="open_tab_seasons(); return false;">Seasons</a></li>
-											<li><a href="#" onclick="open_tab_sites(); return false;">Sites</a></li>
 										</ul>
 									</p>
 								</div>
@@ -185,13 +186,13 @@
 
 					<div class="tab-pane" id="members">
 						<div id="members_results">
-							<h3>Members</h3>
+							<h3>Members - coming soon...</h3>
 						</div>
 					</div><!-- tab-pane -->
 
 					<div class="tab-pane" id="signups">
 						<div id="signups_results">
-							<h3>Signups</h3>
+							<h3>Signups - coming soon...</h3>
 						</div>
 					</div><!-- tab-pane -->
 
@@ -211,13 +212,11 @@
 		var reload_settings = true;
 		var reload_seasons = true;
 		var reload_sites = true;
-		var reload_trips = false;
 
 		//set when done saving a trip so can manually open a tab focused on this trip
 		var recently_saved_trip;
 	
 		function open_tab(tab_name) {
-			//alert(tab);
 			$('#sidenav_tab a[href="#'+tab_name+'"]').tab('show');
 		}
 	
@@ -229,7 +228,8 @@
 			} else {
 				trip = "";
 			}
-			$("#"+tab_name+"_results").html("Loading...");
+			//add_alert("info", "Loading "+tab_name+" tab...");
+			//$("#"+tab_name+"_results").html("Loading...");
 			$.ajax({
 				url: "admin_"+tab_name+"_load.php",
 				data: {
@@ -238,10 +238,14 @@
 				type: "POST",
 				dataType: "html",
 				success: function(html) {
+					clear_alert("info");
+					//add_alert("success", "Loaded.");
 					$("#"+tab_name+"_results").html(html);
 				},
 				error: function(xhr, status, thrown) {
-					$("#"+tab_name+"_results").html("Error loading "+tab_name+" tab: " + thrown);
+					clear_alert("info");
+					add_alert("error", "Error loading "+tab_name+" tab: " + thrown);
+					//$("#"+tab_name+"_results").html("Error loading "+tab_name+" tab: " + thrown);
 				},
 				complete: function(xhr, status) {
 					//alert("The request is complete!");
@@ -249,20 +253,55 @@
 			});
 		}
 	
-		function open_tab_seasons() {
+		function open_tab_seasons(trip_arg) {
 			//reload and show tab manually so that trip is showing
 			reload_seasons = false;
-			load_tab("seasons", recently_saved_trip);
+			load_tab("seasons", trip_arg);
 			open_tab("seasons");
 		}
 	
 		function open_tab_sites(trip_arg) {
 			//reload and show tab manually so that trip is showing
 			reload_sites = false;
-			load_tab("sites", recently_saved_trip);
+			load_tab("sites", trip_arg);
 			open_tab("sites");
 		}
-	
+
+		function load_trip_edit(trip_arg) {
+			if (typeof(trip_arg) == "number") {
+				trip = trip_arg.toString();
+			} else if (typeof(trip_arg) == "string") {
+				trip = trip_arg;
+			} else {
+				add_alert("error", "Invalid Trip");
+				return;
+			}
+			//add_alert("info", "Loading...");
+			$.ajax({
+				url: "admin_trip_edit_load.php",
+				data: {
+					trip: trip
+				},
+				type: "POST",
+				dataType: "html",
+				success: function(html) {
+					clear_alert("info");
+					//add_alert("success", "Loaded.");
+					$("#tabs_trips_panel_edit").html(html);
+					$('#trips_panel_tab a[href="#tabs_trips_panel_edit"]').tab('show');
+					reload_trips = false; //retain results tab when opening trips tab
+					open_tab("edit_trip");
+				},
+				error: function(xhr, status, thrown) {
+					clear_alert("info");
+					add_alert("error", "Error loading: " + thrown);
+				},
+				complete: function(xhr, status) {
+					//alert("The request is complete!");
+				}
+			});
+		}
+
 		function load_modal_trip_add(season_arg, site_arg) {
 			if (typeof(season_arg) == "number") {
 				season = season_arg.toString();
@@ -288,7 +327,7 @@
 				type: "POST",
 				dataType: "html",
 				success: function(html) {
-					//clear_alert("info");
+					clear_alert("info");
 					//add_alert("success", "Loaded.");
 					$("#modal_container_trip_add").html(html);
 					$("#modal_trip_add").modal("show");
@@ -307,7 +346,6 @@
 			if (typeof(trip) != "number") {
 				add_alert("error", "Invalid Trip");
 			} else {
-				//$("#modal_container_trip_copy").html("Loading...");
 				//add_alert("info", "Loading...");
 				$.ajax({
 					url: "admin_trip_copy_load.php",
@@ -317,7 +355,7 @@
 					type: "POST",
 					dataType: "html",
 					success: function(html) {
-						//clear_alert("info");
+						clear_alert("info");
 						//add_alert("success", "Loaded.");
 						$("#modal_container_trip_copy").html(html);
 						$("#modal_trip_copy").modal("show");
@@ -332,7 +370,19 @@
 				});
 			}
 		}
-	
+
+		function show_result(result, control_group_id) {
+			if (result.length > 0) {
+				$("#"+control_group_id).removeClass("info");
+				$("#"+control_group_id).addClass("error");
+				$("#"+control_group_id+"_result").html(result);
+			} else {
+				$("#"+control_group_id).removeClass("error");
+				$("#"+control_group_id).addClass("info");
+				$("#"+control_group_id+"_result").html("");
+			}
+		}
+
 		$(function(){
 	
 			//sidebar
@@ -344,41 +394,33 @@
 					}
 				})
 			}, 100);
-	
-	
+
 			$('#sidenav_tab a[href="#settings"]').on('show', function () {
 				if (reload_settings) {
 					reload_settings = false;
 					load_tab("settings");
 				}
 			});
-	
+
 			$('#sidenav_tab a[href="#seasons"]').on('show', function () {
 				if (reload_seasons) {
 					reload_seasons = false;
 					load_tab("seasons");
 				}
 			});
-	
+
 			$('#sidenav_tab a[href="#sites"]').on('show', function () {
 				if (reload_sites) {
 					reload_sites = false;
 					load_tab("sites");
 				}
 			});
-	
-			$('#sidenav_tab a[href="#trips"]').on('show', function () {
-				if (reload_trips) {
-					reload_trips = false;
-					$('#trips_panel_tab a[href="#tabs_trips_panel_standard"]').tab('show');
-				}
-			});
-	
+
 	//    $('#sidenav_tab a').on('show', function (e) {
 	//      alert(e.target);
 	//      alert(e.target.href);
 	//    });
-	
+
 		});
 
 	</script>

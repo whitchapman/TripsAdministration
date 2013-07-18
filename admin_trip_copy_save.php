@@ -79,15 +79,15 @@
 
 		//-----------------------------------------------------------------
 		
-		//TODO: may want to do something different with trip_state
-
 		//use defaults for trip_id (auto), last_updated, and trip_state (CALC)
+		//TODO: assign edit_state indicating "copied" (probably = 1)
+
 		$sql = "insert into trips";
-		$sql .= " select null, now(), null, null, ".$new_season_id;
+		$sql .= " select null, now(), null, null, null, ".$new_season_id;
 		$sql .= ", date_add(full_payment_date, interval ".$season_diff." year)";
 		$sql .= ", date_add(start_date, interval ".$season_diff." year)";
 		$sql .= ", date_add(end_date, interval ".$season_diff." year)";
-		$sql .= build_fields_sql($conn, "trips", 9);
+		$sql .= build_fields_sql($conn, "trips", 10);
 		$sql .= " from trips";
 		$sql .= " where trip_id=".$old_trip_id;
 		db_exec_query($conn, $sql);
@@ -95,25 +95,12 @@
 		$new_trip_id = $conn->insert_id;
 
 		//-----------------------------------------------------------------
-		//broken - doesn't make sense to copy flight which will always be different from year to year
 
-//		$sql = "insert into trip_flights";
-//		$sql .= " select ".$new_trip_id.", now(), null";
-//		$sql .= ", date_add(flight_release_date, interval 1 year)";
-//		$sql .= ", date_add(ticketing_date, interval 1 year)";
-//		$sql .= build_fields_sql($conn, "trip_flights", 6);
-//		$sql .= " from trip_flights";
-//		$sql .= " where trip_id=".$old_trip_id;
-//		db_exec_query($conn, $sql);
-
-//		$sql = "insert into flight_legs";
-//		$sql .= " select ".$new_trip_id.", order_key, now(), null";
-//		$sql .= ", date_add(departure_time, interval 1 year)";
-//		$sql .= ", date_add(arrival_time, interval 1 year)";
-//		$sql .= build_fields_sql($conn, "flight_legs", 7);
-//		$sql .= " from flight_legs";
-//		$sql .= " where trip_id=".$old_trip_id;
-//		db_exec_query($conn, $sql);
+		$sql = "insert into trip_options";
+		$sql .= " select ".$new_trip_id.", order_key, now(), null, option_text, option_price";
+		$sql .= " from trip_options";
+		$sql .= " where trip_id=".$old_trip_id;
+		db_exec_query($conn, $sql);
 
 		//-----------------------------------------------------------------
 
@@ -124,6 +111,7 @@
 		db_exec_query($conn, $sql);
 
 		//-----------------------------------------------------------------
+		//doesn't make sense to copy flight which will always be different from year to year
 
 		$new_trip_year = $old_trip_year + $season_diff;
 		$trip_str = $old_site_name." ".$new_trip_year;
