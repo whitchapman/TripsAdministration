@@ -55,20 +55,6 @@
 
 	$result->close();
 
-	//-----------------------------------------------------------------
-
-//	$sql = "select airline_id, airline_name";
-//	$sql .= " from airlines";
-//	$sql .= " order by airline_name";
-//	$result = db_exec_query($conn, $sql);
-//
-//	$airlines = array();
-//	while ($row = $result->fetch_assoc()) {
-//		$airlines[] = $row;
-//	}
-//
-//	$result->close();
-
   //-----------------------------------------------------------------
 
 	$sql = "select *";
@@ -100,61 +86,15 @@
 		$trip_notes = $row["trip_notes"];
 
 		$trip_year = date("Y", $start_date);
-		$full_payment_date = date("m/d/Y", $full_payment_date);
-		$start_date = date("m/d/Y", $start_date);
-		$end_date = date("m/d/Y", $end_date);
+		$full_payment_date = date("n/j/Y", $full_payment_date);
+		$start_date = date("n/j/Y", $start_date);
+		$end_date = date("n/j/Y", $end_date);
 
 		$trip_str = $site_name." ".$trip_year;
 		$trip_state_label = create_trip_state_label($trip_state, $full_payment_date, $start_date, $end_date, $max_capacity, $max_waitlist, $num_confirmed, $num_signups);
 	}
 	
 	$result->close();
-
-	//-----------------------------------------------------------------
-
-//	$sql = "select bullet_text";
-//	$sql .= " from trip_bullets where trip_id=".$trip_id;
-//	$sql .= " order by order_key";
-//  $result = db_exec_query($conn, $sql);
-//
-//	$bullets = array();
-//  while ($row = $result->fetch_assoc()) {
-//		$bullets[] = $row;
-//  }
-//
-//	$result->close();
-
-	//-----------------------------------------------------------------
-
-//	$sql = "select *";
-//	$sql .= " from vw_trip_flights";
-//	$sql .= " where trip_id=".$trip_id;
-//  $result = db_exec_query($conn, $sql);
-//
-//	$flight = array();
-//	if ($row = $result->fetch_assoc()) {
-//		$flight = $row;
-//		//$airline_id = $flight["airline_id"];
-//		//$airline_name = $flight["airline_name"];
-//		//$flight_release_date = strtotime($flight["flight_release_date"]);
-//		//$ticketing_date = strtotime($flight["ticketing_date"]);
-//	}
-//
-//	$result->close();
-
-	//-----------------------------------------------------------------
-
-//	$sql = "select *";
-//	$sql .= " from flight_legs where trip_id=".$trip_id;
-//	$sql .= " order by departure_time";
-//  $result = db_exec_query($conn, $sql);
-//
-//	$flight_legs = array();
-//  while ($row = $result->fetch_assoc()) {
-//		$flight_legs[] = $row;
-//  }
-//
-//	$result->close();
 
 	//-----------------------------------------------------------------
 	//close connection

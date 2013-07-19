@@ -15,6 +15,7 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 	<link href="css/datepicker.css" rel="stylesheet" media="screen">
+	<link href="css/datetimepicker.css" rel="stylesheet" media="screen">
 	<link href="css/docs.css" rel="stylesheet">
 
 	<script type="text/javascript">
@@ -23,6 +24,7 @@
 	<script type="text/javascript" src="../js/jquery-2.0.0.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 		<script src="js/html5shiv.js"></script>

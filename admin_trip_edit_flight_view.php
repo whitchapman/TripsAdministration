@@ -24,8 +24,8 @@
 		$flight = $row;
 		$airline_id = $flight["airline_id"];
 		$airline_name = $flight["airline_name"];
-		$flight_release_date = date("m/d/Y", strtotime($flight["flight_release_date"]));
-		$ticketing_date = date("m/d/Y", strtotime($flight["ticketing_date"]));
+		$flight_release_date = date("n/j/Y", strtotime($flight["flight_release_date"]));
+		$ticketing_date = date("n/j/Y", strtotime($flight["ticketing_date"]));
 	}
 
 	$result->close();
@@ -41,6 +41,18 @@
 	$flight_legs = array();
   while ($row = $result->fetch_assoc()) {
 		$flight_legs[] = $row;
+  }
+
+	$result->close();
+
+	$sql = "select max(order_key) max_order_key";
+	$sql .= " from flight_legs";
+	$sql .= " where trip_id=".$trip_id;
+  $result = db_exec_query($conn, $sql);
+
+	$new_order_key = 1;
+  if ($row = $result->fetch_assoc()) {
+		$new_order_key = $row["max_order_key"] + 1;
   }
 
 	$result->close();
@@ -79,18 +91,27 @@
 	</div>
 </div>
 
+<br>
+<ul class="inline">
+	<li><b>Flight Legs</b></li>
+	<li>
+		<div class="btn-group">
+			<a class="btn btn-small" href="#" onclick="edit_section('flight', <?php print $trip_id; ?>, 'leg', <?php print $new_order_key; ?>); return false;">Add Leg</a>
+		</div>
+	</li>
+</ul>
+
 <table class="table table-bordered"><thead>
 	<tr>
 		<th rowspan="2">Flight#</th>
-		<th colspan="3" align="center">Departure</th>
-		<th colspan="3" align="center">Arrival</th>
+		<th colspan="2" align="center">Departure</th>
+		<th colspan="2" align="center">Arrival</th>
+		<th rowspan="2">Actions</th>
 	</tr>
 	<tr>
 		<th>Airport</th>
-		<th>Date</th>
 		<th>Time</th>
 		<th>Airport</th>
-		<th>Date</th>
 		<th>Time</th>
 	</tr>
 </thead><tbody>
@@ -98,22 +119,23 @@
 
 		foreach($flight_legs as $row) {
 
+			$order_key = $row["order_key"];
 			$flight_number = htmlentities($row["flight_number"]);
 			$departure_airport = htmlentities($row["departure_airport"]);
-			$departure_date = date("m/d/Y", strtotime($row["departure_time"]));
-			$departure_time = date("g:ia", strtotime($row["departure_time"]));
+			$departure_time = date("n/j/Y  g:i a", strtotime($row["departure_time"]));
 			$arrival_airport = htmlentities($row["arrival_airport"]);
-			$arrival_date = date("m/d/Y", strtotime($row["arrival_time"]));
-			$arrival_time = date("g:ia", strtotime($row["arrival_time"]));
+			$arrival_time = date("n/j/Y  g:i a", strtotime($row["arrival_time"]));
 
 			print "<tr align=\"center\">";
-			print "                    <td>{$flight_number}</td>";
-			print "                    <td>{$departure_airport}</td>";
-			print "                    <td>{$departure_date}</td>";
-			print "                    <td>{$departure_time}</td>";
-			print "                    <td>{$arrival_airport}</td>";
-			print "                    <td>{$arrival_date}</td>";
-			print "                    <td>{$arrival_time}</td>";
+			print "<td>{$flight_number}</td>";
+			print "<td>{$departure_airport}</td>";
+			print "<td>{$departure_time}</td>";
+			print "<td>{$arrival_airport}</td>";
+			print "<td>{$arrival_time}</td>";
+			print "<td><div class=\"btn-group\">";
+			print "<a class=\"btn btn-small\" href=\"#\" onclick=\"edit_section('flight', {$trip_id}, 'leg', {$order_key}); return false;\">Edit</a>";
+			print "<a class=\"btn btn-small\" href=\"#\" onclick=\"edit_section('flight', {$trip_id}, 'delete', {$order_key}); return false;\">Delete</a>";
+			print "</div></td>";
 			print "</tr>";
 		}
 	

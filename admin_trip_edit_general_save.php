@@ -179,58 +179,6 @@ try {
 			db_exec_query($conn, $sql);
 
 			//----------------------------
-
-//			$full_payment_date = ($season_id-1)."-11-01";
-//			$start_date = $season_id."-01-01";
-//			$end_date = $season_id."-01-08";
-
-			//TODO: assign edit_state indicating "added" (define added and unedited = 0, so sql script works correctly as is)
-
-//			$sql = "insert into trips";
-//			$sql .= " (create_time, season_id, full_payment_date, start_date, end_date,";
-//			$sql .= " site_id, trip_leader, trip_title, trip_description) values (now()";
-//			$sql .= ", ".$season_id;
-//			$sql .= ", '".$full_payment_date."'";
-//			$sql .= ", '".$start_date."'";
-//			$sql .= ", '".$end_date."'";
-//			$sql .= ", ".$site_id;
-//			$sql .= ", ".$trip_leader;
-//			$sql .= ", '".$conn->real_escape_string($trip_title)."'";
-//			$sql .= ", 'RESORT is awesome!'";
-//			$sql .= ")";
-//
-//			db_exec_query($conn, $sql);
-
-			//----------------------------
-			//insert default trip options
-
-			//land only
-			//single room
-			//transportation from airport to hotel
-
-//			$sql = "insert into trip_options";
-//			$sql .= " (trip_id, order_key, create_time, option_text, option_price) values";
-//			$sql .= " (".$trip_id.", 1, now(), 'Land Only', -1),";
-//			$sql .= " (".$trip_id.", 2, now(), 'Single Room (if available)', 1);";
-//
-//			db_exec_query($conn, $sql);
-
-			//----------------------------
-			//insert default trip bullets
-
-//			$sql = "insert into trip_bullets";
-//			$sql .= " (trip_id, order_key, create_time, bullet_text) values";
-//			$sql .= " (".$trip_id.", 1, now(), 'Roundtrip air on AIRLINE from ORIGINATION to DESTINATION'),";
-//			$sql .= " (".$trip_id.", 2, now(), 'Transfers between airport and lodging'),";
-//			$sql .= " (".$trip_id.", 3, now(), '7 Nights Lodging at the <a href=\"http://www.HOTEL.com/\" target=\"_blank\">HOTEL</a>'),";
-//			$sql .= " (".$trip_id.", 4, now(), '6 days of buffet breakfast is included'),";
-//			$sql .= " (".$trip_id.", 5, now(), '5 of 6 day lift ticket at RESORT'),";
-//			$sql .= " (".$trip_id.", 6, now(), 'Welcome reception upon arrival'),";
-//			$sql .= " (".$trip_id.", 7, now(), 'All Taxes and Services');";
-//
-//			db_exec_query($conn, $sql);
-
-			//----------------------------
 			//pass back the trip details
 
 			$msg = $site_name." ".$season_id;

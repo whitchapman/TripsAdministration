@@ -43,9 +43,9 @@
 		$trip_notes = $row["trip_notes"];
 
 		$trip_year = date("Y", $start_date);
-		$full_payment_date = date("m/d/Y", $full_payment_date);
-		$start_date = date("m/d/Y", $start_date);
-		$end_date = date("m/d/Y", $end_date);
+		$full_payment_date = date("n/j/Y", $full_payment_date);
+		$start_date = date("n/j/Y", $start_date);
+		$end_date = date("n/j/Y", $end_date);
 
 		$trip_str = $site_name." ".$trip_year;
 		$trip_state_label = create_trip_state_label($trip_state, $full_payment_date, $start_date, $end_date, $max_capacity, $max_waitlist, $num_confirmed, $num_signups);
@@ -78,54 +78,6 @@
 	}
 
 	//-----------------------------------------------------------------
-
-//	$sql = "select *";
-//	$sql .= " from vw_trip_flights";
-//	$sql .= " where trip_id=".$trip_id;
-//  $result = db_exec_query($conn, $sql);
-//
-//	$flight = array();
-//	if ($row = $result->fetch_assoc()) {
-//		$flight = $row;
-//		$airline_id = $flight["airline_id"];
-//		$airline_name = $flight["airline_name"];
-//		$flight_release_date = strtotime($flight["flight_release_date"]);
-//		$ticketing_date = strtotime($flight["ticketing_date"]);
-//	}
-//
-//	$result->close();
-
-	//-----------------------------------------------------------------
-
-//	$sql = "select *";
-//	$sql .= " from flight_legs";
-//	$sql .= " where trip_id=".$trip_id;
-//	$sql .= " order by departure_time";
-//  $result = db_exec_query($conn, $sql);
-//
-//	$flight_legs = array();
-//  while ($row = $result->fetch_assoc()) {
-//		$flight_legs[] = $row;
-//  }
-//
-//	$result->close();
-
-	//-----------------------------------------------------------------
-
-//	$sql = "select *";
-//	$sql .= " from trip_options";
-//	$sql .= " where trip_id=".$trip_id;
-//	$sql .= " order by order_key";
-//  $result = db_exec_query($conn, $sql);
-//
-//	$trip_options = array();
-//  while ($row = $result->fetch_assoc()) {
-//		$trip_options[] = $row;
-//  }
-//
-//	$result->close();
-
-	//-----------------------------------------------------------------
 	//close connection
 	
 	$conn->close();
@@ -151,8 +103,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section('general', <?php print $trip_id; ?>); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_general(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('general'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_general(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('general'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -212,8 +164,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section('dates', <?php print $trip_id; ?>); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_dates(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('dates'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_dates(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('dates'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -266,8 +218,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section_text(); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_text(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('text'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_text(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('text'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -329,8 +281,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section_images(); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_images(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('images'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_images(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('images'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -409,8 +361,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section('flight', <?php print $trip_id; ?>); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_flight(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('flight'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_flight(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('flight'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -440,8 +392,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section('options', <?php print $trip_id; ?>); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_options(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('options'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_options(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('options'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -471,8 +423,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section('state', <?php print $trip_id; ?>); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_state(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('state'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_state(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('state'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -539,8 +491,8 @@
 
 			<ul class="inline">
 				<li><a class="btn btn-mini edit-link" href="#" onclick="edit_section_notes(); return false;">Edit</a></li>
-				<li><a class="btn btn-mini btn-primary edit-btn hidden" href="#" onclick="save_section_notes(); return false;">Save</a></li>
-				<li><a class="btn btn-mini edit-btn hidden" href="#" onclick="cancel_section('notes'); return false;">Cancel</a></li>
+				<li><a class="btn btn-mini btn-primary save-btn hidden" href="#" onclick="save_section_notes(); return false;">Save</a></li>
+				<li><a class="btn btn-mini cancel-btn hidden" href="#" onclick="cancel_section('notes'); return false;">Cancel</a></li>
 				<li>
 					<div class="control-group error">
 						<div class="controls">
@@ -614,11 +566,12 @@
 	view_section("flight");
 	view_section("options");
 
-	function edit_section(section, trip_arg) {
+	function edit_section(section, trip_arg, subsection, subkey_arg) {
 		if (!$(".edit-link").hasClass("disabled")) {
 			$(".edit-link").addClass("disabled");
 			$(".edit-tab").removeAttr("data-toggle");
-			$(".edit-btn").removeClass("hidden");
+			$(".save-btn").removeClass("hidden");
+			$(".cancel-btn").removeClass("hidden");
 
 			if (typeof(trip_arg) == "number") {
 				trip = trip_arg.toString();
@@ -630,11 +583,26 @@
 				return;
 			}
 
+			if (typeof(subsection) == "string") {
+				url = "admin_trip_edit_"+section+"_"+subsection+"_load.php";
+			} else {
+				url = "admin_trip_edit_"+section+"_load.php";
+			}
+			
+			if (typeof(subkey_arg) == "number") {
+				subkey = subkey_arg.toString();
+			} else if (typeof(subkey_arg) == "string") {
+				subkey = subkey_arg;
+			} else {
+				subkey = "";
+			}
+
 			//add_alert("info", "Loading...");
 			$.ajax({
-				url: "admin_trip_edit_"+section+"_load.php",
+				url: url,
 				data: {
-					trip: trip
+					trip: trip,
+					subkey: subkey
 				},
 				type: "POST",
 				dataType: "html",
@@ -661,7 +629,9 @@
 		$("#trip_edit_"+section+"_link_view").tab("show");
 		$(".edit-link").removeClass("disabled");
 		$(".edit-tab").attr("data-toggle", "tab");
-		$(".edit-btn").addClass("hidden");
+		$(".save-btn").addClass("hidden");
+		$(".save-btn").html("Save");
+		$(".cancel-btn").addClass("hidden");
 	}
 
 	function edit_section_text() {

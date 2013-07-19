@@ -24,9 +24,9 @@
 		$start_date = strtotime($row["start_date"]);
 		$end_date = strtotime($row["end_date"]);
 
-		$full_payment_date = date("m/d/Y", $full_payment_date);
-		$start_date = date("m/d/Y", $start_date);
-		$end_date = date("m/d/Y", $end_date);
+		$full_payment_date = date("n/j/Y", $full_payment_date);
+		$start_date = date("n/j/Y", $start_date);
+		$end_date = date("n/j/Y", $end_date);
 	}
 	
 	$result->close();
@@ -41,7 +41,7 @@
 	<label class="control-label" for="trip_edit_full_payment_date_input">Full Payment Date</label>
 	<div class="controls">
 
-		<div class="input-append date" id="dp1" data-date="<?php print $full_payment_date; ?>" data-date-format="mm/dd/yyyy">
+		<div class="input-append date" id="dp1" data-date="<?php print $full_payment_date; ?>" data-date-format="m/d/yyyy">
 			<input type="text" id="trip_edit_full_payment_date_input" value="<?php print $full_payment_date; ?>" readonly>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>
@@ -53,7 +53,7 @@
 <div class="control-group info" id="trip_edit_start_date">
 	<label class="control-label" for="trip_edit_start_date_input">Start Date</label>
 	<div class="controls">
-		<div class="input-append date" id="dp2" data-date="<?php print $start_date; ?>" data-date-format="mm/dd/yyyy">
+		<div class="input-append date" id="dp2" data-date="<?php print $start_date; ?>" data-date-format="m/d/yyyy">
 		  <input type="text" id="trip_edit_start_date_input" value="<?php print $start_date; ?>" readonly>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>
@@ -64,7 +64,7 @@
 <div class="control-group info" id="trip_edit_end_date">
 	<label class="control-label" for="trip_edit_end_date_input">End Date</label>
 	<div class="controls">
-		<div class="input-append date" id="dp3" data-date="<?php print $end_date; ?>" data-date-format="mm/dd/yyyy">
+		<div class="input-append date" id="dp3" data-date="<?php print $end_date; ?>" data-date-format="m/d/yyyy">
 		  <input type="text" id="trip_edit_end_date_input" value="<?php print $end_date; ?>" readonly>
 			<span class="add-on"><i class="icon-calendar"></i></span>
 		</div>

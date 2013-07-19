@@ -139,8 +139,8 @@
 			$num_confirmed = 25;
 			$num_signups = 100;
 
-			$start_date_str = date("m/d/Y", $start_date);
-			$end_date_str = date("m/d/Y", $end_date);
+			$start_date_str = date("n/j/Y", $start_date);
+			$end_date_str = date("n/j/Y", $end_date);
 			$trip_state_label = create_trip_state_label($trip_state, $full_payment_date, $start_date, $end_date, $max_capacity, $max_waitlist, $num_confirmed, $num_signups);
 
 			print "<tr>";
