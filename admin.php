@@ -87,8 +87,8 @@
 					<li><a href="#settings" data-toggle="tab"><i class="icon-chevron-right"></i> Settings</a></li>
 					<li><a href="#seasons"  data-toggle="tab"><i  class="icon-chevron-right"></i> Seasons</a></li>
 					<li><a href="#sites"  data-toggle="tab"><i  class="icon-chevron-right"></i> Sites</a></li>
-					<li><a href="#add_trip" data-toggle="tab"><i class="icon-chevron-right"></i> Add Trip</a></li>
-					<li><a href="#edit_trip" data-toggle="tab"><i class="icon-chevron-right"></i> Edit Trip</a></li>
+					<li><a href="#add_trip" data-toggle="tab"><i class="icon-chevron-right"></i> Trip Add</a></li>
+					<li><a href="#edit_trip" data-toggle="tab"><i class="icon-chevron-right"></i> Trip Edit</a></li>
 					<li><a href="#members" data-toggle="tab"><i class="icon-chevron-right"></i> Members</a></li>
 					<li><a href="#signups" data-toggle="tab"><i class="icon-chevron-right"></i> Signups</a></li>
 				</ul>
@@ -125,9 +125,9 @@
 							<p>The menu at the left indicates what functionality is currently available to you.
 								<ul>
 									<li>Click on "Settings" to view or edit the current season.</li>
-									<li>Click on "Seasons" to view, edit, or copy all seasons/trips.</li>
-									<li>Click on "Sites" to view, edit, or copy trips by site.</li>
-									<li>Click on "Trips" to add a new trip.</li>
+									<li>Click on "Seasons" to preview, edit, or copy all seasons/trips.</li>
+									<li>Click on "Sites" to preview, edit, or copy trips by site.</li>
+									<li>Click on "Add Trip" to add a new trip.</li>
 								</ul>
 							</p>
 						</div>
@@ -165,7 +165,7 @@
 					</div><!-- trips tab-pane -->
 
 					<div class="tab-pane" id="edit_trip">
-						<div class="tabbable" id="tabs_trips">
+						<div class="tabbable">
 							<div style="display:none;">
 								<ul id="trips_panel_tab" class="nav nav-tabs">
 									<li><a href="#tabs_trips_panel_standard" data-toggle="tab"></a></li>
@@ -214,6 +214,7 @@
 		var reload_settings = true;
 		var reload_seasons = true;
 		var reload_sites = true;
+		var reload_trip_preview = true;
 
 		//set when done saving a trip so can manually open a tab focused on this trip
 		var recently_saved_trip;
@@ -417,6 +418,13 @@
 					load_tab("sites");
 				}
 			});
+
+//			$('#sidenav_tab a[href="#trip_preview"]').on('show', function () {
+//				if (reload_trip_preview) {
+//					reload_trip_preview = false;
+//					load_tab("trip_preview");
+//				}
+//			});
 
 	//    $('#sidenav_tab a').on('show', function (e) {
 	//      alert(e.target);

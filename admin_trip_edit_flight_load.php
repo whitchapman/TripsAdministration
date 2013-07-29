@@ -33,15 +33,18 @@
 	$sql .= " where trip_id=".$trip_id;
   $result = db_exec_query($conn, $sql);
 
-	$flight = array();
 	$flight_exists = false;
+
 	if ($row = $result->fetch_assoc()) {
 		$flight_exists = true;
-		$flight = $row;
-		$airline_id = $flight["airline_id"];
-		$airline_name = $flight["airline_name"];
-		$flight_release_date = date("n/j/Y", strtotime($flight["flight_release_date"]));
-		$ticketing_date = date("n/j/Y", strtotime($flight["ticketing_date"]));
+
+		$airline_id = $row["airline_id"];
+		$airline_name = $row["airline_name"];
+		$flight_release_date = date("n/j/Y", strtotime($row["flight_release_date"]));
+		$ticketing_date = date("n/j/Y", strtotime($row["ticketing_date"]));
+
+		$include_land_only = ($row["include_land_only"] == 1);
+		$land_only_deduction = sprintf ("%.0f", $row["land_only_deduction"]);
 
 		$flight_release_date_str = $flight_release_date;
 		$ticketing_date_str = $ticketing_date;
@@ -51,6 +54,9 @@
 		$flight_release_date_str = "";
 		$ticketing_date = date("n/j/Y");
 		$ticketing_date_str = "";
+
+		$include_land_only = true;
+		$land_only_deduction = "";
 	}
 
 	$result->close();
@@ -78,7 +84,12 @@
 <div class="control-group info">
 	<div class="controls">
 		<label class="checkbox inline">
-			<input type="checkbox" name="trip_edit_flight_checkbox" id="trip_edit_flight_checkbox" value="yes"<?php print ($flight_exists ? " checked" : ""); ?>> There is a Flight for this Trip.
+			<input type="checkbox" name="trip_edit_flight_checkbox" id="trip_edit_flight_checkbox" value="yes"<?php print ($flight_exists ? " checked" : ""); ?>>
+<?php if ($flight_exists) { ?>
+				Uncheck to Delete this Flight.
+<?php } else { ?>
+				Add a Flight for this Trip.
+<?php } ?>
 		</label>
 	</div>
 </div>
@@ -173,6 +184,18 @@
 				</div>
 			</div>
 
+			<div class="control-group info" id="trip_edit_land_only_deduction">
+				<label class="control-label" for="trip_edit_land_only_deduction_input">Land Only Deduction</label>
+				<div class="controls">
+					<label class="checkbox">
+						<input type="checkbox" name="trip_edit_land_only_deduction_checkbox" id="trip_edit_land_only_deduction_checkbox" value="yes"<?php print ($include_land_only ? " checked" : ""); ?>>
+							Include as a trip option
+					</label>
+					<input type="number" id="trip_edit_land_only_deduction_input" value="<?php print $land_only_deduction; ?>" class="<?php print ($include_land_only ? '' : 'hidden'); ?>">
+					<span id="trip_edit_land_only_deduction_result" class="help-inline"></span>
+				</div>
+			</div>
+
 		</div><!-- tab-pane -->
 	</div><!-- tab-content -->
 </div><!-- tabbable -->
@@ -196,7 +219,7 @@
 <?php if ($flight_exists) { ?>
 			$(".save-btn").html("Delete");
 <?php if ($num_flight_legs > 0) { ?>
-			$("#trip_edit_flight_result").html("Can't delete Flight until deleting all Flight Legs.");
+			$("#trip_edit_flight_result").html("For safety, can't delete Flight until deleting all Flight Legs.");
 <?php } } else { ?>
 			$(".save-btn").html("Save");
 <?php } ?>
@@ -220,6 +243,14 @@
 		$("#trip_edit_airline_link_new").tab("show");
 	});
 
+	$("#trip_edit_land_only_deduction_checkbox").click(function() {
+		if ($("input[name=trip_edit_land_only_deduction_checkbox]:checked").length == 0) {
+			$("#trip_edit_land_only_deduction_input").addClass("hidden");
+		} else {
+			$("#trip_edit_land_only_deduction_input").removeClass("hidden");
+		}
+	});
+
 	function save_section_flight() {
 		var valid_edit = true;
 
@@ -236,6 +267,13 @@
 		var flight_release_date = $("#trip_edit_flight_release_date_input").val();
 		var ticketing_date = $("#trip_edit_ticketing_date_input").val();
 
+		var include_land_only = "yes";
+		if ($("input[name=trip_edit_land_only_deduction_checkbox]:checked").length == 0) {
+			include_land_only = "no";
+		}
+
+		var land_only_deduction = $("#trip_edit_land_only_deduction_input").val();
+
 		//do client-side validation here
 
 		if (valid_edit) {
@@ -248,7 +286,9 @@
 					airline_name: airline_name,
 					airline_action: airline_action,
 					flight_release_date: flight_release_date,
-					ticketing_date: ticketing_date
+					ticketing_date: ticketing_date,
+					include_land_only: include_land_only,
+					land_only_deduction: land_only_deduction
 				},
 				type: "POST",
 				dataType: "json",
@@ -265,7 +305,11 @@
 						show_result(json.airline_new_result, "trip_edit_airline_new");
 						show_result(json.flight_release_date_result, "trip_edit_flight_release_date");
 						show_result(json.ticketing_date_result, "trip_edit_ticketing_date");
+						show_result(json.land_only_deduction_result, "trip_edit_land_only_deduction");
 					} else {
+						//changing flight affect land only option
+						view_section("options");
+
 						//reload view (flight could be removed or added which requires a reload)
 						view_section("flight");
 						cancel_section('flight');

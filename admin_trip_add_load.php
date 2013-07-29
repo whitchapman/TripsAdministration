@@ -109,7 +109,7 @@
 		    </div>
 		  </div>
 
-			<div class="tabbable" id="tabs_modal_trip_add_site">
+			<div class="tabbable">
 				<div style="display:none;">
 					<ul class="nav nav-tabs">
 						<li><a id="tabs_modal_trip_add_site_link_existing" href="#tabs_modal_trip_add_site_panel_existing" data-toggle="tab"></a></li>

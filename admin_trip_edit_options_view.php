@@ -14,13 +14,21 @@
 
   //-----------------------------------------------------------------
 
-	$sql = "select trip_price";
+	$sql = "select *";
 	$sql .= " from vw_trips";
 	$sql .= " where trip_id=".$trip_id;
   $result = db_exec_query($conn, $sql);
 	
+	$include_single_room = false;
 	if ($row = $result->fetch_assoc()) {
 		$trip_price = sprintf ("%.0f", $row["trip_price"]);
+		if ($row["single_room_price"] > 0) {
+			$single_room_price = sprintf ("%.0f", $row["single_room_price"]);
+			$include_single_room = ($row["include_single_room"] == 1);
+		}
+	}
+	if (!$include_single_room) {
+		$single_room_price = "";
 	}
 	
 	$result->close();
@@ -40,6 +48,8 @@
 
 	$result->close();
 
+	//------------------------------
+
 	$sql = "select max(order_key) max_order_key";
 	$sql .= " from trip_options";
 	$sql .= " where trip_id=".$trip_id;
@@ -49,6 +59,23 @@
   if ($row = $result->fetch_assoc()) {
 		$new_order_key = $row["max_order_key"] + 1;
   }
+
+	$result->close();
+
+	//------------------------------
+
+	$sql = "select *";
+	$sql .= " from vw_trip_flights";
+	$sql .= " where trip_id=".$trip_id;
+  $result = db_exec_query($conn, $sql);
+
+	$include_land_only = false;
+	if ($row = $result->fetch_assoc()) {
+		if ($row["land_only_deduction"] > 0) {
+			$land_only_deduction = sprintf ("%.0f", $row["land_only_deduction"]);
+			$include_land_only = ($row["include_land_only"] == 1);
+		}
+	}
 
 	$result->close();
 
@@ -63,6 +90,13 @@
 	<label class="control-label" for="trip_edit_price_view">Trip Price</label>
 	<div class="controls">
 		<input type="text" id="trip_edit_price_view" value="<?php print $trip_price; ?>" readonly>
+	</div>
+</div>
+
+<div class="control-group">
+	<label class="control-label" for="trip_edit_single_room_price_view">Single Room Price</label>
+	<div class="controls">
+		<input type="text" id="trip_edit_single_room_price_view" value="<?php print $single_room_price; ?>" readonly>
 	</div>
 </div>
 
@@ -83,6 +117,22 @@
 		<th>Actions</th>
 	</tr>
 <?php
+
+	if ($include_land_only) {
+		print "<tr align=\"center\">";
+		print "<td>Land Only</td>";
+		print "<td>-{$land_only_deduction}</td>";
+		print "<td>Edit on the Flight tab.</td>";
+		print "</tr>";
+	}
+	
+	if ($include_single_room) {
+		print "<tr align=\"center\">";
+		print "<td>Single Room</td>";
+		print "<td>{$single_room_price}</td>";
+		print "<td>Edit Above.</td>";
+		print "</tr>";
+	}
 
 	foreach($trip_options as $row) {
 

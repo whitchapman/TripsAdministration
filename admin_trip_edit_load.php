@@ -85,7 +85,7 @@
 ?>
 <ul class="inline">
 	<li><b><span id="trip_edit_trip_str"><?php print $trip_str; ?></span></b></li>
-	<li><a class="btn btn-small" href="preview_trip.php?trip=<?php print $trip_id; ?>" target="_blank">Preview Trip</a></li>
+	<!--<li><a class="btn btn-small" href="preview_trip.php?trip=<?php print $trip_id; ?>" target="_blank">Preview Trip</a></li>-->
 </ul>
 <div class="tabbable">
 	<ul class="nav nav-tabs">
@@ -97,6 +97,7 @@
 		<li class="edit-link"><a class="edit-tab" id="trip_edit_main_link_options" href="#trip_edit_main_panel_options" data-toggle="tab" onclick="return false;">Price & Options</a></li>
 		<li class="edit-link"><a class="edit-tab" id="trip_edit_main_link_state" href="#trip_edit_main_panel_state" data-toggle="tab" onclick="return false;">State</a></li>
 		<li class="edit-link"><a class="edit-tab" id="trip_edit_main_link_notes" href="#trip_edit_main_panel_notes" data-toggle="tab" onclick="return false;">Notes</a></li>
+		<li class="edit-link"><a class="edit-tab" id="trip_edit_main_link_preview" href="#trip_edit_main_panel_preview" data-toggle="tab" onclick="return false;">Preview</a></li>
 	</ul>
 	<div class="tab-content">
 		<div id="trip_edit_main_panel_general" class="tab-pane active">
@@ -536,11 +537,60 @@
 
 			</form>
 		</div><!-- tab-pane -->
+		<div id="trip_edit_main_panel_preview" class="tab-pane">
+
+			<a class="btn btn-primary" id="trip_edit_preview_link" href="preview_trip.php?trip=<?php print $trip_id; ?>" target="_blank">Preview Trip</a>
+			<br>
+			<br>
+			<br>
+			<br>
+			<span class="info">Optionally preview the Trip as if it has one or more of the following overrides:</span>
+			<br>
+			<br>
+			<form class="form-inline">
+				<label class="checkbox" for="trip_edit_preview_state_select">
+					<input type="checkbox" name="trip_edit_preview_state_checkbox" id="trip_edit_preview_state_checkbox"> Trip State Override 
+				</label>
+				<select id="trip_edit_preview_state_select" class="hidden">
+					<?php
+						for ($i = 1; $i < 8; $i++) {
+							$trip_state_str = trip_state_to_string($i);
+							print "<option value=\"{$i}\">{$trip_state_str}</option>";
+						}
+					?>
+				</select>
+				<span id="trip_edit_preview_state_result" class="help-inline info"></span>
+			</form>
+
+		</div><!-- tab-pane -->
 	</div><!-- tab-content -->
 </div><!-- tabbable -->	
 </form>
 <script type="text/javascript">
 
+	function build_preview_link_href() {
+		var href = "preview_trip.php?trip=<?php print $trip_id; ?>";
+		if ($("input[name=trip_edit_preview_state_checkbox]:checked").length == 0) {
+			$("#trip_edit_preview_link").attr("href", href);
+		} else {
+			str = "&trip_state_override="+$("#trip_edit_preview_state_select").val();
+			$("#trip_edit_preview_link").attr("href", href+str);
+		}
+	}
+	
+	$("#trip_edit_preview_state_select").change(function() {
+		build_preview_link_href();
+	});
+
+	$("#trip_edit_preview_state_checkbox").click(function() {
+		if ($("input[name=trip_edit_preview_state_checkbox]:checked").length == 0) {
+			$("#trip_edit_preview_state_select").addClass("hidden");
+		} else {
+			$("#trip_edit_preview_state_select").removeClass("hidden");
+		}
+		build_preview_link_href();
+	});
+	
 	function view_section(section) {
 		$.ajax({
 			url: "admin_trip_edit_"+section+"_view.php",

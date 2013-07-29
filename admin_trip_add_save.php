@@ -197,12 +197,12 @@ try {
 			//single room
 			//transportation from airport to hotel
 
-			$sql = "insert into trip_options";
-			$sql .= " (trip_id, order_key, create_time, option_text, option_price) values";
-			$sql .= " (".$trip_id.", 1, now(), 'Land Only', -1),";
-			$sql .= " (".$trip_id.", 2, now(), 'Single Room (if available)', 1);";
-
-			db_exec_query($conn, $sql);
+//			$sql = "insert into trip_options";
+//			$sql .= " (trip_id, order_key, create_time, option_text, option_price) values";
+//			$sql .= " (".$trip_id.", 1, now(), 'Land Only', -1),";
+//			$sql .= " (".$trip_id.", 2, now(), 'Single Room (if available)', 1);";
+//
+//			db_exec_query($conn, $sql);
 
 			//----------------------------
 			//insert default trip bullets

@@ -53,7 +53,7 @@
 	<label class="control-label" for="trip_edit_option_price_input">Option Price</label>
 	<div class="controls">
 		<input type="number" id="trip_edit_option_price_input" value="<?php print $option_price; ?>">
-		<span id="trip_edit_option_price_result" class="help-inline"></span>
+		<span id="trip_edit_option_price_result" class="help-inline">Use negative number for overall price reduction.</span>
 	</div>
 </div>
 

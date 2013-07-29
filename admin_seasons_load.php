@@ -62,7 +62,7 @@
 	$conn->close();
 
 ?>
-<div class="tabbable" id="tabs_seasons">
+<div class="tabbable">
 	<ul class="nav nav-tabs">
 <?php
 

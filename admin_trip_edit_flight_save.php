@@ -15,6 +15,8 @@ try {
 	$airline_action = post_to_string("airline_action");
 	$flight_release_date_str = post_to_string("flight_release_date");
 	$ticketing_date_str = post_to_string("ticketing_date");
+	$include_land_only = post_to_string("include_land_only");
+	$land_only_deduction = post_to_string("land_only_deduction");
 
 	$msg = "";
 	$valid = true;
@@ -24,6 +26,7 @@ try {
 	$airline_new_result = "";
 	$flight_release_date_result = "";
 	$ticketing_date_result = "";
+	$land_only_deduction_result = "";
 
 	if ((!is_numeric($trip_id)) || (intval($trip_id) < 1)) {
 		$msg = "Invalid Trip.";
@@ -146,6 +149,22 @@ try {
 				}
 			}
 
+			//-----------------------------------------------------------------
+			//validate deduction
+
+			if ($include_land_only != "yes") {
+				$include_land_only = 0;
+			} else {
+				//including land only
+				$include_land_only = 1;
+
+				if ((!is_numeric($land_only_deduction)) || (intval($land_only_deduction) <= 0)) {
+					$msg = "Correct errors below:";
+					$land_only_deduction_result = "Invalid price, must be greater than zero.";
+					$valid = false;
+				}
+			}
+
 			if ($valid) {
 
 				//----------------------------
@@ -185,16 +204,20 @@ try {
 					$sql .= " airline_id=".$airline_id;
 					$sql .= ", flight_release_date='".date("Y-m-d", $flight_release_date)."'";
 					$sql .= ", ticketing_date='".date("Y-m-d", $ticketing_date)."'";
+					$sql .= ", include_land_only=".$include_land_only;
+					$sql .= ", land_only_deduction=".$land_only_deduction;
 					$sql .= " where trip_id=".$trip_id;
 				
 					db_exec_query($conn, $sql);
 
 				} else {
 
-					$sql = "insert into trip_flights (trip_id, create_time, airline_id, flight_release_date, ticketing_date) values";
+					$sql = "insert into trip_flights (trip_id, create_time, airline_id, flight_release_date, ticketing_date, include_land_only, land_only_deduction) values";
 					$sql .= " (".$trip_id.", now(), ".$airline_id;
 					$sql .= ", '".date("Y-m-d", $flight_release_date)."'";
-					$sql .= ", '".date("Y-m-d", $ticketing_date)."')";
+					$sql .= ", '".date("Y-m-d", $ticketing_date)."'";
+					$sql .= ", ".$include_land_only;
+					$sql .= ", ".$land_only_deduction.")";
 
 					db_exec_query($conn, $sql);
 				}
@@ -209,6 +232,7 @@ try {
 				print "\"airline_new_result\":\"".$airline_new_result."\",";
 				print "\"flight_release_date_result\":\"".$flight_release_date_result."\",";
 				print "\"ticketing_date_result\":\"".$ticketing_date_result."\",";
+				print "\"land_only_deduction_result\":\"".$land_only_deduction_result."\",";
 			}
 		}
 

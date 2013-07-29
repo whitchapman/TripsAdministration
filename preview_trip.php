@@ -6,6 +6,12 @@
 
 	//use REQUEST so can accept GET or POST
 	$trip_id = key_to_string($_REQUEST, "trip");
+	
+	if (array_key_exists("trip_state_override", $_REQUEST)) {
+		$trip_state_override = trim($_REQUEST["trip_state_override"]);
+	} else {
+		$trip_state_override = "";
+	}
 
   //-----------------------------------------------------------------
 	//look up season_id from trip_id

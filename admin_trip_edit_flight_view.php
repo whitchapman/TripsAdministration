@@ -22,10 +22,20 @@
 	$flight = array();
 	if ($row = $result->fetch_assoc()) {
 		$flight = $row;
-		$airline_id = $flight["airline_id"];
-		$airline_name = $flight["airline_name"];
-		$flight_release_date = date("n/j/Y", strtotime($flight["flight_release_date"]));
-		$ticketing_date = date("n/j/Y", strtotime($flight["ticketing_date"]));
+
+		$airline_id = $row["airline_id"];
+		$airline_name = $row["airline_name"];
+		$flight_release_date = date("n/j/Y", strtotime($row["flight_release_date"]));
+		$ticketing_date = date("n/j/Y", strtotime($row["ticketing_date"]));
+
+		$include_land_only = false;
+		if ($row["land_only_deduction"] > 0) {
+			$land_only_deduction = sprintf ("%.0f", $row["land_only_deduction"]);
+			$include_land_only = ($row["include_land_only"] == 1);
+		}
+		if (!$include_land_only) {
+			$land_only_deduction = "";
+		}
 	}
 
 	$result->close();
@@ -88,6 +98,13 @@
 	<label class="control-label" for="trip_edit_ticketing_date_view">Ticketing Date</label>
 	<div class="controls">
 		<input type="text" id="trip_edit_ticketing_date_view" value="<?php print $ticketing_date; ?>" readonly>
+	</div>
+</div>
+
+<div class="control-group">
+	<label class="control-label" for="trip_edit_land_only_deduction_view">Land Only Deduction</label>
+	<div class="controls">
+		<input type="text" id="trip_edit_land_only_deduction_view" value="<?php print $land_only_deduction; ?>" readonly>
 	</div>
 </div>
 

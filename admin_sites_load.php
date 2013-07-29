@@ -80,7 +80,7 @@
 		</li>
 	</ul>
 </div>
-<div class="tabbable" id="tabs_seasons">
+<div class="tabbable">
 	<div style="display:none;">
 		<ul id="site_name_tab" class="nav nav-tabs">
 			<?php

@@ -19,8 +19,11 @@
 	$sql .= " where trip_id=".$trip_id;
   $result = db_exec_query($conn, $sql);
 	
+	$include_single_room = false;
 	if ($row = $result->fetch_assoc()) {
 		$trip_price = sprintf ("%.0f", $row["trip_price"]);
+		$include_single_room = ($row["include_single_room"] == 1);
+		$single_room_price = sprintf ("%.0f", $row["single_room_price"]);
 	}
 	
 	$result->close();
@@ -39,12 +42,39 @@
 	</div>
 </div>
 
+<div class="control-group info" id="trip_edit_single_room_price">
+	<label class="control-label" for="trip_edit_single_room_price_input">Single Room Price</label>
+	<div class="controls">
+		<label class="checkbox">
+			<input type="checkbox" name="trip_edit_single_room_price_checkbox" id="trip_edit_single_room_price_checkbox" value="yes"<?php print ($include_single_room ? " checked" : ""); ?>>
+				Include as a trip option
+		</label>
+		<input type="number" id="trip_edit_single_room_price_input" value="<?php print $single_room_price; ?>" class="<?php print ($include_single_room ? '' : 'hidden'); ?>">
+		<span id="trip_edit_single_room_price_result" class="help-inline"></span>
+	</div>
+</div>
+
 <script type="text/javascript">
+
+	$("#trip_edit_single_room_price_checkbox").click(function() {
+		if ($("input[name=trip_edit_single_room_price_checkbox]:checked").length == 0) {
+			$("#trip_edit_single_room_price_input").addClass("hidden");
+		} else {
+			$("#trip_edit_single_room_price_input").removeClass("hidden");
+		}
+	});
 
 	function save_section_options() {
 		var valid_edit = true;
 
 		var trip_price = $("#trip_edit_price_input").val();
+
+		var include_single_room = "yes";
+		if ($("input[name=trip_edit_single_room_price_checkbox]:checked").length == 0) {
+			include_single_room = "no";
+		}
+
+		var single_room_price = $("#trip_edit_single_room_price_input").val();
 
 		//do client-side validation here
 
@@ -53,7 +83,9 @@
 				url: "admin_trip_edit_options_save.php",
 				data: {
 					trip: <?php print $trip_id; ?>,
-					trip_price: trip_price
+					trip_price: trip_price,
+					include_single_room: include_single_room,
+					single_room_price: single_room_price
 				},
 				type: "POST",
 				dataType: "json",
@@ -68,11 +100,12 @@
 						$("#trip_edit_options_result").html(json.msg);
 
 						show_result(json.trip_price_result, "trip_edit_price");
+						show_result(json.single_room_price_result, "trip_edit_single_room_price");
 
 					} else {
 
-						$("#trip_edit_price_view").val(json.trip_price);
-
+						//reload view (prices and options could have changed)
+						view_section("options");
 						cancel_section('options');
 
 						//changes made require reload of seasons and sites tabs
